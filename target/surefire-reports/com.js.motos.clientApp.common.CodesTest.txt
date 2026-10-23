@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: com.js.motos.clientApp.common.CodesTest
+-------------------------------------------------------------------------------
+Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.115 s -- in com.js.motos.clientApp.common.CodesTest

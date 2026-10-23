@@ -1,0 +1,141 @@
+spring:
+  application:
+    name: clientApp
+  profiles:
+    active: ${APP_PROFILE:dev}
+
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    hikari:
+      # Neon's free tier caps connections; keep the pool small.
+      maximum-pool-size: ${DB_POOL_MAX:5}
+      minimum-idle: 1
+      connection-timeout: 30000
+      idle-timeout: 300000
+      max-lifetime: 900000
+
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        jdbc:
+          time_zone: UTC
+          batch_size: 30
+        order_inserts: true
+        order_updates: true
+
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+
+  mail:
+    host: ${MAIL_HOST:smtp.gmail.com}
+    port: ${MAIL_PORT:587}
+    username: ${MAIL_USERNAME:}
+    password: ${MAIL_PASSWORD:}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+          connectiontimeout: 5000
+          timeout: 5000
+          writetimeout: 5000
+
+  servlet:
+    multipart:
+      max-file-size: 8MB
+      max-request-size: 10MB
+
+  jackson:
+    default-property-inclusion: non_null
+
+server:
+  port: ${PORT:8080}
+  error:
+    include-message: never
+    include-stacktrace: never
+  forward-headers-strategy: framework
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: never
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    operationsSorter: method
+
+logging:
+  level:
+    com.js.motos.clientApp: ${LOG_LEVEL:INFO}
+
+app:
+  # Public base URL, used to build the URL encoded into physical QR codes.
+  base-url: ${APP_BASE_URL:http://localhost:8080}
+  support-email: ${SUPPORT_EMAIL:support@example.com}
+  brand-name: ${BRAND_NAME:Motos Rewards}
+
+  jwt:
+    # MUST be >= 32 bytes. Generate: openssl rand -base64 48
+    secret: ${JWT_SECRET}
+    issuer: ${JWT_ISSUER:motos-clientapp}
+    access-token-ttl: ${JWT_ACCESS_TTL:PT15M}
+
+  refresh:
+    ttl: ${REFRESH_TTL:P30D}
+    max-sessions-per-user: 5
+
+  otp:
+    length: 6
+    ttl: PT10M
+    max-verify-attempts: 5
+    resend-cooldown: PT60S
+    max-per-hour-per-email: 5
+    max-per-hour-per-ip: 20
+    # When true the OTP is logged and returned in the API response instead of
+    # being emailed. NEVER enable outside local development.
+    dev-mode: ${OTP_DEV_MODE:false}
+
+  pin:
+    length: 4
+    max-attempts: 5
+    lockout-duration: PT15M
+    # How long a PIN unlock keeps the session "fully" trusted. After this,
+    # a refresh returns a PIN_REQUIRED token and the user must re-enter the PIN.
+    session-ttl: ${PIN_SESSION_TTL:PT30M}
+
+  google:
+    # Accepts tokens from any of these OAuth client IDs (Android + Web).
+    client-ids: ${GOOGLE_CLIENT_IDS:}
+
+  cloudinary:
+    cloud-name: ${CLOUDINARY_CLOUD_NAME:}
+    api-key: ${CLOUDINARY_API_KEY:}
+    api-secret: ${CLOUDINARY_API_SECRET:}
+    folder: ${CLOUDINARY_FOLDER:motos/receipts}
+    # When false, receipts are written to local disk instead (dev only).
+    enabled: ${CLOUDINARY_ENABLED:false}
+
+  storage:
+    local-dir: ${LOCAL_STORAGE_DIR:./uploads}
+
+  security:
+    # AES-256 key for encrypting bank account numbers at rest.
+    # Generate: openssl rand -base64 32
+    encryption-key: ${DATA_ENCRYPTION_KEY}
+    cors-allowed-origins: ${CORS_ORIGINS:*}
+
+  admin:
+    # On startup, this email is created/promoted to ADMIN if set.
+    bootstrap-email: ${ADMIN_BOOTSTRAP_EMAIL:}

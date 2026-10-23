@@ -1,0 +1,4 @@
+com\js\motos\clientApp\common\CodesTest.class
+com\js\motos\clientApp\auth\service\PinServiceTest.class
+com\js\motos\clientApp\ClientAppApplicationTests.class
+com\js\motos\clientApp\qr\service\QrCodeExtractionTest.class

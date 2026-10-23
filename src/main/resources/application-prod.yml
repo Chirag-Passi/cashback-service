@@ -1,0 +1,17 @@
+spring:
+  jpa:
+    properties:
+      hibernate:
+        format_sql: false
+
+logging:
+  level:
+    com.js.motos.clientApp: INFO
+    org.hibernate.SQL: WARN
+
+app:
+  otp:
+    # Hard-off in production regardless of the environment variable.
+    dev-mode: false
+  cloudinary:
+    enabled: true
